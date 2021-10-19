@@ -79,7 +79,7 @@ router.post('/courses', authenticateUser, asyncHandler(async(req, res) => {
 
         try {
             const course = await Course.create(req.body);
-            // course.userId = user.id; 
+            // course.userId = user.id;? 
             res.status(201).location(`api/courses/${course.id}`).end();
         } catch (error) {
             if (error.name === "SequelizeValidationError") {
