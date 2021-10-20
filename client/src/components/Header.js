@@ -1,21 +1,30 @@
 import React, {Component} from 'react';
+import { NavLink } from 'react-router-dom';
 
 export default class Header extends Component {
   render() {
+    // const { context } = this.props;
+    // const authUser = context.authenticatedUser;
     return(
       <header>
-        <div class="wrap header--flex">
-          <h1 class="header--logo"><a href={ /* home page link */}>Courses</a></h1>
+        <div className="wrap header--flex">
+          <h1 className="header--logo"><NavLink to = "/">Courses</NavLink></h1>
           <nav>
-          {/* use ternerary operator to determine which button to show */}
-            <ul class="header--signedin">
-              <li>Welcome, Joe Smith!</li>
-              <li><a href={ /* sign out link */}>Sign Out</a></li>
-            </ul>
-            <ul class="header--signedout">
-              <li><a href={ /* sign UP link */}>Sign Up</a></li>
-              <li><a href={ /* sign OUT link */}>Sign In</a></li>
-            </ul>
+            {/* {authUser ? ( */}
+              {/* <React.Fragment>
+                <ul className="header--signedin">
+                  <li>Welcome, Joe Smith!</li>
+                  <li><NavLink to="/signout">Sign Out</NavLink></li>
+                </ul>
+                </React.Fragment>
+            ) : ( */}
+              <React.Fragment>
+                <ul className="header--signedout">
+                  <li><NavLink to="/signup">Sign Up</NavLink></li>
+                  <li><NavLink to="/signin">Sign In</NavLink></li>
+                </ul>
+              </React.Fragment>
+            {/* )} */}
           </nav>
         </div>
       </header>

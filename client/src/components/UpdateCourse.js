@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class UpdateCourse extends Component {
   state = {
-
+    course: {}
   }
 
   handleUpdate() {
@@ -13,10 +14,10 @@ export default class UpdateCourse extends Component {
   render() {
 
     return (
-      <div class="wrap">
+      <div className="wrap">
         <h2>Update Course</h2>
         <form>
-          <div class="main--flex">
+          <div className="main--flex">
             <div>
               <label for="courseTitle">Course Title</label>
               <input id="courseTitle" name="courseTitle" type="text" value="Build a Basic Bookcase"></input>
@@ -34,7 +35,7 @@ export default class UpdateCourse extends Component {
               <textarea id="materialsNeeded" name="materialsNeeded">* 1/2 x 3/4 inch parting strip&#13;&#13;* 1 x 2 common pine&#13;&#13;* 1 x 4 common pine&#13;&#13;* 1 x 10 common pine&#13;&#13;* 1/4 inch thick lauan plywood&#13;&#13;* Finishing Nails&#13;&#13;* Sandpaper&#13;&#13;* Wood Glue&#13;&#13;* Wood Filler&#13;&#13;* Minwax Oil Based Polyurethane</textarea>
             </div>
           </div>
-          <button class="button" type="submit" onclick={this.handleUpdate}>Update Course</button><button class="button button-secondary" onclick="event.preventDefault(); location.href={/* course detail page link */};">Cancel</button>
+          <button className="button" type="submit" onclick={this.handleUpdate}>Update Course</button><Link className="button button-secondary" to={`/course/${this.state.course.id}`}>Cancel</Link>
       </form>
     </div>
     );

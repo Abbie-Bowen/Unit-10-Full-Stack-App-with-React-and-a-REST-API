@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class UserSignIn extends Component {
   state = {
@@ -16,7 +17,7 @@ export default class UserSignIn extends Component {
   render() {
 
     return (
-      <div class="form--centered">
+      <div className="form--centered">
         <h2>Sign In</h2>
         
         <form>
@@ -24,9 +25,9 @@ export default class UserSignIn extends Component {
           <input id="emailAddress" name="emailAddress" type="email" value=""></input>
           <label for="password">Password</label>
           <input id="password" name="password" type="password" value=""></input>
-          <button class="button" type="submit">Sign In</button><button class="button button-secondary" onclick="event.preventDefault(); location.href={/*link to home page*/};">Cancel</button>
+          <button className="button" type="submit">Sign In</button><Link className="button button-secondary" to='/'>Cancel</Link>
         </form>
-        <p>Don't have a user account? Click here to <a href={/* link to sign UP page */}>sign up</a>!</p>
+        <p>Don't have a user account? Click here to <Link to="/signup">sign up</Link>!</p>
         
       </div>
     );

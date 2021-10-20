@@ -1,13 +1,29 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+import Material from './Material';
+
 
 export default class CourseDetail extends Component {
-	state = {
-		course: {}
-	}
-
+	constructor(props) {
+		super(props);
+		this.state = {
+		  course: [],
+      user: [],
+		  loading: false,
+		};
+	  }
 	componentDidMount() {
-		//retrieve course information by making GET request to /api/courses/:id
-	}
+		this.setState({ loading: true });
+		fetch(`http://localhost:5000/api/courses/3`)
+		  .then(response => response.json())
+		  .then(data => this.setState( {
+			course: data.course,
+      user: data.course.user,
+			loading: false
+		  }))
+		  .catch(err => console.log('Error fetching and parsing data', err));
+	  }
 
 	handleDelete() {
 		//when delete course button is clicked, send a DELETE request to API 
@@ -16,54 +32,49 @@ export default class CourseDetail extends Component {
 	}
 
 	render() {
+    let materialsNeeded = (this.state.course.materialsNeeded) ? (this.state.course.materialsNeeded.map((material) => {
+      return <Material material={material} />
+    })) : null;
 
 		return (
-			<main> {/* This MAIN tag needs to be replaced with React.Fragment */}
-				<div class="actions--bar">
-					<div class="wrap">
-						<a class="button" href={/* link to update course page */}>Update Course</a>
-						<a class="button" href="#" onclick={this.handleDelete}>Delete Course</a>
-						<a class="button button-secondary" href={/* home page link */}>Return to List</a>
+			<div>
+				<div className="actions--bar">
+					<div className="wrap">
+						<Link className="button" to={`/courses/${this.state.course.id}/update`}>Update Course</Link>
+						<button className="button" href="#" onclick={this.handleDelete}>Delete Course</button>
+						<Link className="button button-secondary" to="/">Return to List</Link>
 					</div>
 				</div>
+				{(this.state.loading) ? 
+          			(<div class="loader">Loading...</div>) :  
+		          (<div className="wrap">
+								<h2>Course Detail</h2>
+								<form>
+									<div className="main--flex">
+										<div>
+											<h3 className="course--detail--title">Course</h3>
+											<h4 className="course--name">{this.state.course.title}</h4>
+											<p>{`By ${this.state.user.firstName} ${this.state.user.lastName}`}</p>
 
-				<div class="wrap">
-					<h2>Course Detail</h2>
-					<form>
-						<div class="main--flex">
-							<div>
-							{/* replace all course info below with data from API call */}
-								<h3 class="course--detail--title">Course</h3>
-								<h4 class="course--name">Build a Basic Bookcase</h4>
-								<p>By Joe Smith</p>
+											<p>{this.state.course.description}</p>
+										</div>
+										<div>
+                      {(this.state.course.estimatedTime) ? 
+											  (<React.Fragment>
+                          <h3 className="course--detail--title">Estimated Time</h3>
+                          <p>{this.state.course.estimatedTime}</p>
+                        </React.Fragment>) : (null) }
 
-								<p>High-end furniture projects are great to dream about. But unless you have a well-equipped shop and some serious woodworking experience to draw on, it can be difficult to turn the dream into a reality.</p>
-
-								<p>Not every piece of furniture needs to be a museum showpiece, though. Often a simple design does the job just as well and the experience gained in completing it goes a long way toward making the next project even better.</p>
-
-								<p>Our pine bookcase, for example, features simple construction and it's designed to be built with basic woodworking tools. Yet, the finished project is a worthy and useful addition to any room of the house. While it's meant to rest on the floor, you can convert the bookcase to a wall-mounted storage unit by leaving off the baseboard. You can secure the cabinet to the wall by screwing through the cabinet cleats into the wall studs.</p>
-
-								<p>We made the case out of materials available at most building-supply dealers and lumberyards, including 1/2 x 3/4-in. parting strip, 1 x 2, 1 x 4 and 1 x 10 common pine and 1/4-in.-thick lauan plywood. Assembly is quick and easy with glue and nails, and when you're done with construction you have the option of a painted or clear finish.</p>
-
-								<p>As for basic tools, you'll need a portable circular saw, hammer, block plane, combination square, tape measure, metal rule, two clamps, nail set and putty knife. Other supplies include glue, nails, sandpaper, wood filler and varnish or paint and shellac.</p>
-
-								<p>The specifications that follow will produce a bookcase with overall dimensions of 10 3/4 in. deep x 34 in. wide x 48 in. tall. While the depth of the case is directly tied to the 1 x 10 stock, you can vary the height, width and shelf spacing to suit your needs. Keep in mind, though, that extending the width of the cabinet may require the addition of central shelf supports.</p>
+											<h3 className="course--detail--title">Materials Needed</h3>
+											<ul className="course--detail--list">
+                          {materialsNeeded}
+											</ul>
+										</div>
+									</div>
+								</form>
 							</div>
-							<div>
-								<h3 class="course--detail--title">Estimated Time</h3>
-								<p>14 hours</p>
-
-								<h3 class="course--detail--title">Materials Needed</h3>
-								<ul class="course--detail--list">
-									{/* for all materials in data.materials, add an <li> */}
-										<li>1/2 x 3/4 inch parting strip</li>
-								</ul>
-							</div>
-						</div>
-					</form>
-				</div>
-			</main>
-
+			)}			
+			</div>
 		);
 	}
 

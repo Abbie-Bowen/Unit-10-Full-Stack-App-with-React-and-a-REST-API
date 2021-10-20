@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class CreateCourse extends Component {
   state = {
-
+    errors: [],
   }
 
   handleCreate() {
@@ -10,20 +11,31 @@ export default class CreateCourse extends Component {
     // ** requires authentication
   }
 
+  
+  ErrorsDisplay({ errors }) {
+    let errorsDisplay = null;
+
+    if (this.state.errors.length) {
+      errorsDisplay = (
+        <div className="validation--errors">
+          <h3>Validation Errors</h3>
+          <ul>
+            {this.state.errors.map((error, i) => <li key={i}>{error}</li>)}
+          </ul>
+        </div>
+      );
+    }
+    return errorsDisplay;
+  }
+
   render() {
 
     return (
-      <div class="wrap">
+      <div className="wrap">
         <h2>Create Course</h2>
-        <div class="validation--errors">
-          <h3>Validation Errors</h3>
-          <ul>
-            <li>Please provide a value for "Title"</li>
-            <li>Please provide a value for "Description"</li>
-          </ul>
-        </div>
+        {this.ErrorsDisplay}
         <form>
-          <div class="main--flex">
+          <div className="main--flex">
             <div>
               <label for="courseTitle">Course Title</label>
               <input id="courseTitle" name="courseTitle" type="text" value=""></input>
@@ -41,10 +53,11 @@ export default class CreateCourse extends Component {
               <textarea id="materialsNeeded" name="materialsNeeded"></textarea>
             </div>
           </div>
-          <button class="button" type="submit">Create Course</button><button class="button button-secondary" onclick="event.preventDefault(); location.href='index.html';">Cancel</button>
+          <button className="button" type="submit" onclick={this.handleCreate}>Create Course</button><Link className="button button-secondary" to="/">Cancel</Link>
         </form>
       </div>
     );
   }
+
 
 }
