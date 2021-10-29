@@ -11,11 +11,12 @@ export default class CourseDetail extends Component {
 		  course: [],
       user: [],
 		  loading: false,
+      id: this.props.match.params.id,
 		};
 	  }
 	componentDidMount() {
 		this.setState({ loading: true });
-		fetch(`http://localhost:5000/api/courses/3`)
+		fetch(`http://localhost:5000/api/courses/${this.state.id}`)
 		  .then(response => response.json())
 		  .then(data => this.setState( {
 			course: data.course,
@@ -32,21 +33,17 @@ export default class CourseDetail extends Component {
 	}
 
 	render() {
-    let materialsNeeded = (this.state.course.materialsNeeded) ? (this.state.course.materialsNeeded.map((material) => {
-      return <Material material={material} />
-    })) : null;
-
 		return (
 			<div>
 				<div className="actions--bar">
 					<div className="wrap">
-						<Link className="button" to={`/courses/${this.state.course.id}/update`}>Update Course</Link>
-						<button className="button" href="#" onclick={this.handleDelete}>Delete Course</button>
+						<Link className="button" to={`/courses/${this.state.id}/update`}>Update Course</Link>
+						<button className="button" href="#" onClick={this.handleDelete}>Delete Course</button>
 						<Link className="button button-secondary" to="/">Return to List</Link>
 					</div>
 				</div>
 				{(this.state.loading) ? 
-          			(<div class="loader">Loading...</div>) :  
+          			(<div className="loader">Loading...</div>) :  
 		          (<div className="wrap">
 								<h2>Course Detail</h2>
 								<form>
@@ -64,11 +61,13 @@ export default class CourseDetail extends Component {
                           <h3 className="course--detail--title">Estimated Time</h3>
                           <p>{this.state.course.estimatedTime}</p>
                         </React.Fragment>) : (null) }
-
-											<h3 className="course--detail--title">Materials Needed</h3>
-											<ul className="course--detail--list">
-                          {materialsNeeded}
-											</ul>
+                      {(this.state.course.materialsNeeded) ? 
+                        (<React.Fragment>
+                          <h3 className="course--detail--title">Materials Needed</h3>
+                          <ul className="course--detail--list">
+                              {this.state.course.materialsNeeded}
+                          </ul>
+                          </React.Fragment>) : (null) }
 										</div>
 									</div>
 								</form>

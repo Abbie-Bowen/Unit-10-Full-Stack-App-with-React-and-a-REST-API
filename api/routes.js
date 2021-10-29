@@ -101,7 +101,7 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async(req, res) => {
             if (course.userId === user.id) {
                 try {
                     await course.update(req.body);
-                    res.status(204).end();
+                    res.status(204).json({message: 'Successfully updated course.'}).end();
                 } catch (error) {
                     if (error.name === "SequelizeValidationError") {
                         const errors = error.errors.map((err) => err.message);

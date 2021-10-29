@@ -26,13 +26,13 @@ export default class Courses extends Component {
 
   render() {
     let courses = this.state.courses.map((course) => {
-      return <Course id={`${course.id}`} title={`${course.title}`} />
+      return <Course key ={`${course.id}`} id={`${course.id}`} title={`${course.title}`} />
     });
 
     return (
       <div className="wrap main--grid">
           {(this.state.loading) ? 
-          <div class="loader">Loading...</div> : <React.Fragment> {courses} </React.Fragment>} 
+          <div className="loader">Loading...</div> : <React.Fragment> {courses} </React.Fragment>} 
         <Link className="course--module course--add--module" to="/courses/create">
           <span className="course--add--title">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
