@@ -6,6 +6,7 @@ import { BrowserRouter as Router,
   } from 'react-router-dom';
 
 import { Provider } from './components/Context';
+
 import Header from './components/Header';
 import Courses from './components/Courses';
 import CreateCourse from './components/CreateCourse';
@@ -14,6 +15,16 @@ import CourseDetail from './components/CourseDetail';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import UserSignOut from './components/UserSignOut';
+
+import withContext from './components/Context';
+
+const HeaderWithContext = withContext(Header);
+const UserSignUpWithContext = withContext(UserSignUp);
+const UserSignInWithContext = withContext(UserSignIn);
+const UserSignOutWithContext = withContext(UserSignOut);
+const CreateCourseWithContext = withContext(CreateCourse);
+const UpdateCourseWithContext = withContext(UpdateCourse);
+const CourseDetailWithContext = withContext(CourseDetail);
 
 class App extends Component {
 
@@ -26,16 +37,16 @@ class App extends Component {
       <Provider>
         <Router>
           <div className="root">
-            <Header />
+            <HeaderWithContext /> {/* auth used to display user name and login/out buttons */}
             <main>
               <Switch>
-                <Route exact path = "/" component = {Courses} />
-                {/* <Route path = "/courses/create" component = {CreateCourse} /> */}
-                <Route path = "/courses/:id/update" component = {UpdateCourse} />
-                <Route path = "/courses/:id" component = {CourseDetail} />
-                <Route path = "/signin" component = {UserSignIn} />
-                <Route path = "/signup" component = {UserSignUp} />
-                <Route path = "/signout" component = {UserSignOut} />
+                <Route exact path = "/" component = {Courses} /> {/* public route, no auth necessary */}
+                {/* <Route path = "/courses/create" component = {CreateCourseWithContext} /> */} {/* auth required, private route */}
+                <Route path = "/courses/:id/update" component = {UpdateCourseWithContext} /> {/* auth required, private route */}
+                <Route path = "/courses/:id" component = {CourseDetailWithContext} /> {/* auth used for delete and update button display */}
+                <Route path = "/signin" component = {UserSignInWithContext} />
+                <Route path = "/signup" component = {UserSignUpWithContext} />
+                <Route path = "/signout" component = {UserSignOutWithContext} />
               </Switch>
             </main>
           </div>

@@ -1,33 +1,19 @@
-import React, { Component, useDebugValue } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 export default class UserSignIn extends Component {
-  state = {
-    username: '',
-    password: '',
-    errors: []
+  constructor(props) {
+		super(props);
+    this.state = {
+      emailAddress: '',
+      password: '',
+      errors: []
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  render() {
-
-    return (
-      <div className="form--centered">
-        <h2>Sign In</h2>
-        
-        <form>
-          <label htmlFor="emailAddress">Email Address</label>
-          <input id="emailAddress" name="emailAddress" type="email" defaultValue="Email Address" onChange={this.change}></input>
-          <label htmlFor="password">Password</label>
-          <input id="password" name="password" type="password" defaultValue="Password" onChange={this.change}></input>
-          <button className="button" type="submit">Sign In</button><Link className="button button-secondary" to='/'>Cancel</Link>
-        </form>
-        <p>Don't have a user account? Click here to <Link to="/signup">sign up</Link>!</p>
-        
-      </div>
-    );
-  }
-
-  change = (event) => {
+  handleChange(event) {
     const name = event.target.name;
     const value = event.target.value;
 
@@ -38,14 +24,52 @@ export default class UserSignIn extends Component {
     });
   }
 
-  submit = () => {
-    const { context } = this.props;
-    //on click, makes a GET call to /api/users
-    //redirects the user back to the previous screen (i.e. if they were on create course
-    //then sign in, they would go back to create course)
-  }
+  handleSubmit(event) {
+    event.preventDefault()
 
-  //persist user credentials using HTTP cookie so user authentication state is maintained
+    const { context } = this.props;
+    const { from } = this.props.location;
+    const { emailAddress, password } = this.state;
+
+    context.actions.signIn(emailAddress, password)
+      .then((user) => {
+        if (user === null) {
+          this.setState(() => {
+            return { errors: ['Sign-in was unsuccessful. Please try again.']};
+          }); 
+        } else {
+          this.props.history.push(from);
+        }
+      }) 
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+
+  render() {
+    return (
+      <div className="form--centered">
+        <h2>Sign In</h2>
+        {(this.state.errors.length) ?
+          (<div className="validation--errors">
+              <h3>Validation Errors</h3>
+              <ul>
+                {this.state.errors.map((error, i) => <li key={i}>{error}</li>)}
+              </ul>
+            </div>
+          ): (null)}
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="emailAddress">Email Address</label>
+          <input id="emailAddress" name="emailAddress" type="email" placeholder="Email Address" onChange={this.handleChange}></input>
+          <label htmlFor="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Password" onChange={this.handleChange}></input>
+          <button className="button" type="submit">Sign In</button><Link className="button button-secondary" to='/'>Cancel</Link>
+        </form>
+        <p>Don't have a user account? Click here to <Link to="/signup">sign up</Link>!</p>
+        
+      </div>
+    );
+  }
 
 
 
