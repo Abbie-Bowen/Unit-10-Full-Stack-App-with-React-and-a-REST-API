@@ -17,6 +17,7 @@ import UserSignUp from './components/UserSignUp';
 import UserSignOut from './components/UserSignOut';
 
 import withContext from './components/Context';
+import PrivateRoute from './components/PrivateRoute';
 
 const HeaderWithContext = withContext(Header);
 const UserSignUpWithContext = withContext(UserSignUp);
@@ -26,12 +27,7 @@ const CreateCourseWithContext = withContext(CreateCourse);
 const UpdateCourseWithContext = withContext(UpdateCourse);
 const CourseDetailWithContext = withContext(CourseDetail);
 
-class App extends Component {
-
-
-  // componentDidMount() {
-  // }
-  
+class App extends Component {  
   render() {
     return (
       <Provider>
@@ -41,8 +37,8 @@ class App extends Component {
             <main>
               <Switch>
                 <Route exact path = "/" component = {Courses} /> {/* public route, no auth necessary */}
-                {/* <Route path = "/courses/create" component = {CreateCourseWithContext} /> */} {/* auth required, private route */}
-                <Route path = "/courses/:id/update" component = {UpdateCourseWithContext} /> {/* auth required, private route */}
+                <PrivateRoute path = "/courses/create" component = {CreateCourseWithContext} /> {/* auth required, private route */}
+                <PrivateRoute path = "/courses/:id/update" component = {UpdateCourseWithContext} /> {/* auth required, private route */}
                 <Route path = "/courses/:id" component = {CourseDetailWithContext} /> {/* auth used for delete and update button display */}
                 <Route path = "/signin" component = {UserSignInWithContext} />
                 <Route path = "/signup" component = {UserSignUpWithContext} />
