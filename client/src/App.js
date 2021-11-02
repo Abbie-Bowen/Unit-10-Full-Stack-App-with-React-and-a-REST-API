@@ -19,6 +19,10 @@ import UserSignOut from './components/UserSignOut';
 import withContext from './components/Context';
 import PrivateRoute from './components/PrivateRoute';
 
+import NotFound from './components/ErrorMessaging/NotFound';
+import Forbidden from './components/ErrorMessaging/Forbidden';
+import UnhandledError from './components/ErrorMessaging/UnhandledError';
+
 const HeaderWithContext = withContext(Header);
 const UserSignUpWithContext = withContext(UserSignUp);
 const UserSignInWithContext = withContext(UserSignIn);
@@ -43,6 +47,10 @@ class App extends Component {
                 <Route path = "/signin" component = {UserSignInWithContext} />
                 <Route path = "/signup" component = {UserSignUpWithContext} />
                 <Route path = "/signout" component = {UserSignOutWithContext} />
+                <Route path = "/forbidden" component = {Forbidden} />
+                <Route path = "/error" component = {UnhandledError} />
+                <Route path = "/notfound" component = {NotFound} />
+                <Route component = {NotFound} /> 
               </Switch>
             </main>
           </div>

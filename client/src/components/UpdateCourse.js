@@ -5,13 +5,17 @@ export default class UpdateCourse extends Component {
   constructor(props) {
 		super(props);
 		this.state = {
-		  course: [],
-      user: [],
+      courseTitle: '',
+      coursedescription: '',
+      estimatedTime: '',
+      materialsNeeded: '',
+      userId: '',
+      errors: [],
 		  loading: false,
 		};
 
+    this.handleChange = this.handleChange.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
-    this.input = React.createRef() //creates uncontrolled components for form inputs
   }
 
   componentDidMount() {
@@ -19,71 +23,101 @@ export default class UpdateCourse extends Component {
 		fetch(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
 		  .then(response => response.json())
 		  .then(data => this.setState( {
-			course: data.course,
-      user: data.course.user,
-			loading: false
+        courseTitle: data.course.title,
+        courseDescription: data.course.description,
+        estimatedTime: data.course.estimatedTime,
+        materialsNeeded: data.course.materialsNeeded,
+        userId: data.course.user.id,
+			  loading: false
 		  }))
-		  .catch(err => console.log('Error fetching and parsing data', err));
+		  .catch((err) => {
+        console.log('Error fetching and parsing data', err);
+        this.props.history.push('/notfound');
+      });
   }
 
-  handleUpdate() {
-    //requires authentication
+  handleChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
 
-    // PUT request with a JSON body using fetch
-    // from https://jasonwatmore.com/post/2020/11/02/react-fetch-http-put-request-examples
-    const requestOptions = {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json' },
+    this.setState(() => {
+      return {
+        [name]: value
+      };
+    });
+  }
+
+  handleUpdate(event) {
+    event.preventDefault()
+
+    const { context } = this.props;
+    const user = context.authenticatedUser;
+
+    if (user.userId === this.state.userId) {
+      const { 
+        courseTitle,
+        courseDescription,
+        estimatedTime,
+        materialsNeeded
+      } = this.state;
+  
+      //create course
+      const course = {
+        title: courseTitle,
+        description: courseDescription,
+        estimatedTime,
+        materialsNeeded,
+        userId: user.userId,
+      }
+  
+      //set url path
+      const path = "/courses/" + this.props.match.params.id;
+  
+      context.data.updateCourse(path, course, user.emailAddress, user.password)
+        .then((errors) => {
+          if (errors.length) {
+            this.setState( {errors} );
+          } else {
+              this.props.history.push(`/courses/${this.props.match.params.id}`);
+          }
+        }) 
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      this.props.history.push('/forbidden');
     }
-		fetch(`http://localhost:5000/api/courses/${this.props.match.params.id}`, requestOptions)
-		  .then(response => {
-        response.json()
-        console.log(response.message, response.status) //no auth currently, expected "You don't have authorization to edit this course." 
-        if (response.status === 204) {
-        this.props.history.replace(`/courses/${this.props.match.params.id}`)
-      }})
-      .catch(err => console.log('Error fetching and parsing data', err));
-  }
-
-  ErrorsDisplay() {
-    let errorsDisplay = null;
-
-    if (this.props.errors.length) {
-      errorsDisplay = (
-        <div className="validation--errors">
-          <h3>Validation Errors</h3>
-          <ul>
-            {this.props.errors.map((error, i) => <li key={i}>{error}</li>)}
-          </ul>
-        </div>
-      );
     }
-    return errorsDisplay;
-  }
 
   render() {
-
     return (
       <div className="wrap">
         <h2>Update Course</h2>
-        {/* {this.ErrorsDisplay} */}
+        {(this.state.errors.length) ?
+          (<div className="validation--errors">
+              <h3>Validation Errors</h3>
+              <ul>
+                {this.state.errors.map((error, i) => <li key={i}>{error}</li>)}
+              </ul>
+            </div>
+          ): (null)}
         <form>
           <div className="main--flex">
             <div>
               <label htmlFor="courseTitle">Course Title</label>
-              <input id="courseTitle" name="courseTitle" type="text" defaultValue={this.state.course.title} ref={this.input}></input>
+              <input id="courseTitle" name="courseTitle" type="text" value={this.state.courseTitle} onChange={this.handleChange}></input>
 
-              <p>{`By ${this.state.user.firstName} ${this.state.user.lastName}`}</p>
+              <p>{`By ${this.props.context.authenticatedUser.firstName} ${this.props.context.authenticatedUser.lastName}`}</p>
 
               <label htmlFor="courseDescription">Course Description</label>
-              <textarea id="courseDescription" name="courseDescription" defaultValue={this.state.course.description} ref={this.input}></textarea>
+              <textarea id="courseDescription" name="courseDescription" value={this.state.courseDescription} onChange={this.handleChange}></textarea>
             </div>
             <div>
               <label htmlFor="estimatedTime">Estimated Time</label>
-              <input id="estimatedTime" name="estimatedTime" type="text" defaultValue={this.state.course.estimatedTime} ref={this.input}></input>
+              <input id="estimatedTime" name="estimatedTime" type="text" value={this.state.estimatedTime} onChange={this.handleChange}></input>
 
               <label htmlFor="materialsNeeded">Materials Needed</label>
-              <textarea id="materialsNeeded" name="materialsNeeded" defaultValue= {this.state.course.materialsNeeded} ref={this.input}></textarea>
+              <textarea id="materialsNeeded" name="materialsNeeded" value= {this.state.materialsNeeded} onChange={this.handleChange}></textarea>
             </div>
           </div>
           <button className="button" type="submit" onClick={this.handleUpdate}>Update Course</button><Link className="button button-secondary" to={`/courses/${this.props.match.params.id}`}>Cancel</Link>

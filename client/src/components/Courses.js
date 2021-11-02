@@ -15,12 +15,23 @@ export default class Courses extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     fetch('http://localhost:5000/api/courses/')
-      .then(response => response.json())
+      .then(response => {
+        if (response.status === 404) {
+          this.props.history.push('/notfound');
+        } else if (response.status === 500 ) {
+          this.props.history.push('/error');
+        } else {
+            return response.json()
+        }
+      })        
       .then(data => this.setState( {
         courses: data.courses,
         loading: false
       }))
-      .catch(err => console.log('Error fetching and parsing data', err));
+      .catch((err) => {
+        console.log('Error fetching and parsing data', err);
+        this.props.history.push('/notfound');
+      });
   }
 
 

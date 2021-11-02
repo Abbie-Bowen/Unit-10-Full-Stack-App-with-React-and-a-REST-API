@@ -30,7 +30,6 @@ export default class UserSignUp extends Component {
     event.preventDefault()
 
     const { context } = this.props;
-    const { from } = this.props.location;
     const { 
       firstName,
       lastName,
@@ -53,7 +52,7 @@ export default class UserSignUp extends Component {
         } else {
           context.actions.signIn(emailAddress, password)
             .then(() => {
-              this.props.history.push(from);
+              this.props.history.goBack();
             });
         }
       }) 
