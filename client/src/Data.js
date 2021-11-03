@@ -1,6 +1,8 @@
 import {createBrowserHistory} from 'history';
+// createBrowserHistory from: https://newbedev.com/how-to-access-history-object-outside-of-a-react-component
 
 export default class Data {
+  //template that sets up and makes API call
   api(path, method = 'GET', body = null, requiresAuth=false, credentials = null) {
     const url = 'http://localhost:5000/api' + path;
 

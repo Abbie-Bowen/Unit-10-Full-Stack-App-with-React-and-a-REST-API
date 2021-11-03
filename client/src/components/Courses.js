@@ -12,6 +12,7 @@ export default class Courses extends Component {
     };
   }
 
+  //on component mount retrieves courses data from API
   componentDidMount() {
     this.setState({ loading: true });
     fetch('http://localhost:5000/api/courses/')
@@ -41,8 +42,8 @@ export default class Courses extends Component {
 
     return (
       <div className="wrap main--grid">
-          {(this.state.loading) ? 
-          <div className="loader">Loading...</div> : <React.Fragment> {courses} </React.Fragment>} 
+        {(this.state.loading) ? 
+        <div className="loader">Loading...</div> : <React.Fragment> {courses} </React.Fragment>} 
         <Link className="course--module course--add--module" to="/courses/create">
           <span className="course--add--title">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"

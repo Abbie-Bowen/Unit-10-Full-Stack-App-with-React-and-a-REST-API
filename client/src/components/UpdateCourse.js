@@ -35,7 +35,7 @@ export default class UpdateCourse extends Component {
 			  loading: false
 		    });
         if (user.userId !== this.state.userId) {
-          this.props.history.replace('/forbidden');
+          this.props.history.replace('/forbidden'); //replace used so user can't navigate back to same forbidden page. 
         }
       })
 		  .catch((err) => {

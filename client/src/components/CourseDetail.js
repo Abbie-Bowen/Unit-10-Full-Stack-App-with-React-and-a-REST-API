@@ -15,6 +15,7 @@ export default class CourseDetail extends Component {
     this.handleDelete = this.handleDelete.bind(this);
 	  }
 
+  //on component mount retrieves course data from API
 	componentDidMount() {
 		this.setState({ loading: true });
 		fetch(`http://localhost:5000/api/courses/${this.state.id}`)
@@ -22,7 +23,7 @@ export default class CourseDetail extends Component {
         if (response.status === 404) {
           this.props.history.push('/notfound');
         } else if (response.status === 500 ) {
-          this.props.history.replace('/error');
+          this.props.history.push('/error');
         } else {
             return response.json()
         }
