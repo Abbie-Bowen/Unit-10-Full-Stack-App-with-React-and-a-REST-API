@@ -28,6 +28,7 @@ export default class UserSignIn extends Component {
     event.preventDefault()
 
     const { context } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: "/" } };
     const { emailAddress, password } = this.state;
 
     context.actions.signIn(emailAddress, password)
@@ -37,7 +38,7 @@ export default class UserSignIn extends Component {
             return { errors: ['Sign-in was unsuccessful. Please try again.']};
           }); 
         } else {
-          this.props.history.goBack();
+          this.props.history.push(from);
         }
       }) 
       .catch((error) => {

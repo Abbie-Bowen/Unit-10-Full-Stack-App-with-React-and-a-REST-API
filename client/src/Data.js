@@ -1,3 +1,5 @@
+import {createBrowserHistory} from 'history';
+
 export default class Data {
   api(path, method = 'GET', body = null, requiresAuth=false, credentials = null) {
     const url = 'http://localhost:5000/api' + path;
@@ -27,7 +29,8 @@ export default class Data {
     } else if (response.status === 401) {
       return null;
     } else if (response.status === 500) {
-      this.props.history.push("/error");
+      createBrowserHistory().push("/error");
+      window.location.reload();
     } else {
       throw new Error();
     }
@@ -42,7 +45,8 @@ export default class Data {
         return data.errors;
       });
     } else if (response.status === 500) {
-      this.props.history.push("/error");
+      createBrowserHistory().push("/error");
+      window.location.reload();
     } else {
       throw new Error();
     }
@@ -57,7 +61,8 @@ export default class Data {
         return data.errors;
       });
     } else if (response.status === 500) {
-      this.props.history.push("/error");
+      createBrowserHistory().push("/error");
+      window.location.reload();
     } else {
       throw new Error();
     }
@@ -72,7 +77,8 @@ export default class Data {
         return data.errors;
       });
     } else if (response.status === 500) {
-      this.props.history.push("/error");
+      createBrowserHistory().push("/error");
+      window.location.reload();
     } else {
       throw new Error();
     }
@@ -83,7 +89,8 @@ export default class Data {
     if (response.status === 204) {
       return [];
     } else if (response.status === 500) {
-      this.props.history.push("/error");
+      createBrowserHistory().push("/error");
+      window.location.reload();
     } else {
       throw new Error();
     }

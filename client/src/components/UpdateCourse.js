@@ -19,17 +19,25 @@ export default class UpdateCourse extends Component {
   }
 
   componentDidMount() {
+    const { context } = this.props;
+    const user = context.authenticatedUser;
+
 		this.setState({ loading: true });
 		fetch(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
 		  .then(response => response.json())
-		  .then(data => this.setState( {
+		  .then(data => {
+        this.setState( {
         courseTitle: data.course.title,
         courseDescription: data.course.description,
         estimatedTime: data.course.estimatedTime,
         materialsNeeded: data.course.materialsNeeded,
         userId: data.course.user.id,
 			  loading: false
-		  }))
+		    });
+        if (user.userId !== this.state.userId) {
+          this.props.history.replace('/forbidden');
+        }
+      })
 		  .catch((err) => {
         console.log('Error fetching and parsing data', err);
         this.props.history.push('/notfound');
@@ -53,41 +61,37 @@ export default class UpdateCourse extends Component {
     const { context } = this.props;
     const user = context.authenticatedUser;
 
-    if (user.userId === this.state.userId) {
-      const { 
-        courseTitle,
-        courseDescription,
-        estimatedTime,
-        materialsNeeded
-      } = this.state;
-  
-      //create course
-      const course = {
-        title: courseTitle,
-        description: courseDescription,
-        estimatedTime,
-        materialsNeeded,
-        userId: user.userId,
-      }
-  
-      //set url path
-      const path = "/courses/" + this.props.match.params.id;
-  
-      context.data.updateCourse(path, course, user.emailAddress, user.password)
-        .then((errors) => {
-          if (errors.length) {
-            this.setState( {errors} );
-          } else {
-              this.props.history.push(`/courses/${this.props.match.params.id}`);
-          }
-        }) 
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      this.props.history.push('/forbidden');
+    const { 
+      courseTitle,
+      courseDescription,
+      estimatedTime,
+      materialsNeeded
+    } = this.state;
+
+    //create course
+    const course = {
+      title: courseTitle,
+      description: courseDescription,
+      estimatedTime,
+      materialsNeeded,
+      userId: user.userId,
     }
-    }
+
+    //set url path
+    const path = "/courses/" + this.props.match.params.id;
+
+    context.data.updateCourse(path, course, user.emailAddress, user.password)
+      .then((errors) => {
+        if (errors.length) {
+          this.setState( {errors} );
+        } else {
+            this.props.history.push(`/courses/${this.props.match.params.id}`);
+        }
+      }) 
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   render() {
     return (

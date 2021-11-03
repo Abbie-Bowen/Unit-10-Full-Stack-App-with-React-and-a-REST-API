@@ -16,10 +16,10 @@ export default class Courses extends Component {
     this.setState({ loading: true });
     fetch('http://localhost:5000/api/courses/')
       .then(response => {
-        if (response.status === 404) {
-          this.props.history.push('/notfound');
-        } else if (response.status === 500 ) {
+        if (response.status === 500) {
           this.props.history.push('/error');
+        } else if (response.status === 404 ) {
+          this.props.history.push('/notfound');
         } else {
             return response.json()
         }
@@ -30,7 +30,6 @@ export default class Courses extends Component {
       }))
       .catch((err) => {
         console.log('Error fetching and parsing data', err);
-        this.props.history.push('/notfound');
       });
   }
 

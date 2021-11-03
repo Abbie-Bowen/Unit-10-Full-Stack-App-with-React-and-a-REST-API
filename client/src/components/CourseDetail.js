@@ -22,7 +22,7 @@ export default class CourseDetail extends Component {
         if (response.status === 404) {
           this.props.history.push('/notfound');
         } else if (response.status === 500 ) {
-          this.props.history.push('/error');
+          this.props.history.replace('/error');
         } else {
             return response.json()
         }
@@ -34,7 +34,6 @@ export default class CourseDetail extends Component {
 		  }))
 		  .catch((err) => {
         console.log('Error fetching and parsing data', err);
-        this.props.history.push('/notfound');
       });
 	  }
 
